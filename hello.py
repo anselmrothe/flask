@@ -1,5 +1,5 @@
 from flask import Flask
-app = Flask(__name__, static_url_path='/static')
+app = Flask('hello', static_url_path='/static')
 
 
 @app.route("/")
@@ -14,9 +14,13 @@ def the_name_is_arbitrary():
 
 @app.route('/<variable>')
 def the_name_is_arbitrary_but_unique(variable):
-    return 'Variable: ' + variable
+    return 'Your variable is: ' + variable
 
 
 @app.route('/x')
 def arbitrary():
     return app.send_static_file('hello.html')
+
+# run the application with debug mode
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -10,7 +10,7 @@ def show_main():
     return app.send_static_file('index.html')
 
 
-@app.route('/<variable>')
+@app.route('/<variable>/')
 def show_html(variable):
     return app.send_static_file('{}/index.html'.format(variable))
 

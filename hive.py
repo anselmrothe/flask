@@ -1,14 +1,16 @@
 from flask import Flask
 from github_webhook import Webhook
 import git
+import os
 
-
-app = Flask('hive', static_folder='site', static_url_path='')
-webhook = Webhook(app)
 
 # git_dir = 'hive_mind'  # a github repository folder
 git_dir = 'test2'  # a github repository folder
 g = git.cmd.Git(git_dir)
+
+html_folder = git_dir + '/site'
+app = Flask('hive', static_folder=html_folder, static_url_path='')
+webhook = Webhook(app)
 
 
 @app.route('/')
@@ -25,6 +27,14 @@ def show_html(variable):
 @app.route('/pull/')
 def git_pull():
     msg = g.pull()
+    return msg
+
+
+# Mkdocs: Build
+@app.route('/build/')
+def mkdocs_build():
+    p = os.popen('cd ' + git_dir + '; mkdocs build; pwd')
+    msg = 'Mkdocs built into this folder: ' + p.read()
     return msg
 
 

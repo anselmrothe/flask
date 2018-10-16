@@ -1,9 +1,14 @@
 from flask import Flask
 from github_webhook import Webhook
+import git
 
 
 app = Flask('hive', static_folder='site', static_url_path='')
 webhook = Webhook(app)
+
+# git_dir = 'hive_mind'  # a github repository folder
+git_dir = 'test2'  # a github repository folder
+g = git.cmd.Git(git_dir)
 
 
 @app.route('/')
@@ -14,6 +19,13 @@ def show_main():
 @app.route('/<variable>/')
 def show_html(variable):
     return app.send_static_file('{}/index.html'.format(variable))
+
+
+# Github: Pull
+@app.route('/pull/')
+def git_pull():
+    msg = g.pull()
+    return msg
 
 
 # Webhooks: Define a handler for the 'push' event

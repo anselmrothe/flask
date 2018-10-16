@@ -1,5 +1,6 @@
-from github_webhook import Webhook
 from flask import Flask
+from github_webhook import Webhook
+
 
 app = Flask('hive', static_folder='site', static_url_path='')
 webhook = Webhook(app)
@@ -15,10 +16,11 @@ def show_html(variable):
     return app.send_static_file('{}/index.html'.format(variable))
 
 
-# Define a handler for the 'push' event
+# Webhooks: Define a handler for the 'push' event
 @webhook.hook()
 def on_push(data):
     print("Got push with: {0}".format(data))
+
 
 # run the application with debug mode
 if __name__ == "__main__":

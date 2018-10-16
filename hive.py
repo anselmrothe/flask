@@ -1,7 +1,7 @@
 from flask import Flask
 from github_webhook import Webhook
 import git
-import os
+import subprocess
 
 
 # git_dir = 'hive_mind'  # a github repository folder
@@ -33,8 +33,9 @@ def git_pull():
 # Mkdocs: Build
 @app.route('/build/')
 def mkdocs_build():
-    p = os.popen('cd ' + git_dir + '; mkdocs build; pwd')
-    msg = 'Mkdocs built into this folder: ' + p.read()
+    p = subprocess.Popen('cd ' + git_dir + '; mkdocs build',
+                         shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    msg = '[Mkdocs] ' + p.stdout.read()
     return msg
 
 

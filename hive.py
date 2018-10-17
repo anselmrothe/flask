@@ -64,9 +64,13 @@ def git_pull():
 # Mkdocs: Build
 @app.route('/build/')
 def mkdocs_build():
-    p = subprocess.Popen('cd ' + git_dir + '; mkdocs build',
-                         shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    msg = '[Mkdocs] ' + p.stdout.read()
+    cmd = 'cd ' + git_dir + '; mkdocs build'
+    proc = subprocess.Popen(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    proc_out, proc_err = proc.communicate()
+    out = proc_out.replace('\n', '<br>')
+    err = proc_err.replace('\n', '<br>')
+    msg = '[Mkdocs] <br>' + err + out
     return msg
 
 

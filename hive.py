@@ -1,15 +1,15 @@
 from flask import Flask, redirect, request
 from flask_httpauth import HTTPBasicAuth
 from github_webhook import Webhook
-import git
 import subprocess
+import git
+import os
 
 
-# git_dir = 'hive_mind'  # a github repository folder
-git_dir = 'test2'  # a github repository folder
+git_dir = os.getcwd()  # a github repository folder
 g = git.cmd.Git(git_dir)
 
-html_folder = git_dir + '/site'
+html_folder = git_dir + '/site'  # html files from mkdocs
 app = Flask('hive', static_folder=html_folder, static_url_path='')
 webhook = Webhook(app)
 auth = HTTPBasicAuth()

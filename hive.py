@@ -2,6 +2,7 @@ from flask import Flask, redirect, request
 from flask_httpauth import HTTPBasicAuth
 from github_webhook import Webhook
 import subprocess
+import json
 import git
 import os
 
@@ -14,10 +15,11 @@ app = Flask('hive', static_folder=html_folder, static_url_path='')
 webhook = Webhook(app)
 auth = HTTPBasicAuth()
 
-users = {
-    "simple": "pw1",  # has access to main page
-    "advanced": "level2"  # has access to sub pages
-}
+users = json.load(open("users.txt"))
+# users = {
+#     "simple": 'xxxx',  # has access to main page
+#     "advanced": 'xxxx'  # has access to sub pages
+# }
 
 
 @app.route('/')

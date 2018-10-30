@@ -22,23 +22,33 @@ users = json.load(open("users.txt"))
 # }
 
 
+def advanced_user_only():
+    if auth.username() == 'advanced':
+        return 'access granted'
+    else:
+        msg = 'No access for user: ' + auth.username()
+        login_trigger_url = 'http://login:xxx@' + request.host
+        login_link = '<a href="{}">Login as a different user</a>'.format(
+            login_trigger_url)
+        return msg + '<br><br>' + login_link
+
+
+# Website: Main Page
 @app.route('/')
 @auth.login_required
 def show_main():
     return app.send_static_file('index.html')
 
 
+# Website: Sub Page
 @app.route('/<variable>/')
 @auth.login_required
 def show_html(variable):
-    if auth.username() == 'advanced':
+    check = advanced_user_only()
+    if check == 'access granted':
         return app.send_static_file('{}/index.html'.format(variable))
     else:
-        msg = 'No access for user: ' + auth.username()
-        login_trigger_url = 'http://login:xxx@' + request.host
-        login_link = '<a href="{}">Login as a different user</a>'.format(
-            login_trigger_url + '/' + variable)
-        return msg + '<br><br>' + login_link
+        return check
 
 
 # Password: Check
@@ -66,14 +76,18 @@ def git_pull():
 # Mkdocs: Build
 @app.route('/build/')
 def mkdocs_build():
-    cmd = 'cd ' + git_dir + '; mkdocs build'
-    proc = subprocess.Popen(
-        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    proc_out, proc_err = proc.communicate()
-    out = proc_out.replace('\n', '<br>')
-    err = proc_err.replace('\n', '<br>')
-    msg = '[Mkdocs] <br>' + err + out
-    return msg
+    check = advanced_user_only()
+    if check == 'access granted':
+        cmd = 'cd ' + git_dir + '; mkdocs build'
+        proc = subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        proc_out, proc_err = proc.communicate()
+        out = proc_out.replace('\n', '<br>')
+        err = proc_err.replace('\n', '<br>')
+        msg = '[Mkdocs] <br>' + err + out
+        return msg
+    else:
+        return check
 
 
 # Webhooks: Define a handler for the 'push' event

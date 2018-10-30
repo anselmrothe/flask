@@ -3,4 +3,5 @@ site_name: My Docs
 nav:
     - '': index.md
     - 'ABC': abc.md
-    - 'DEF': def.md
+    - 'DEF (advanced)': def-advanced.md
+    - 'GHI (advanced)': ghi-advanced.md

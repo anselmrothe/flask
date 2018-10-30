@@ -44,11 +44,14 @@ def show_main():
 @app.route('/<variable>/')
 @auth.login_required
 def show_html(variable):
-    check = advanced_user_only()
-    if check == 'access granted':
-        return app.send_static_file('{}/index.html'.format(variable))
+    if variable.endswith('-advanced'):
+        check = advanced_user_only()
+        if check != 'access granted':
+            return check
+        else:
+            return app.send_static_file('{}/index.html'.format(variable))
     else:
-        return check
+        return app.send_static_file('{}/index.html'.format(variable))
 
 
 # Password: Check
@@ -68,6 +71,7 @@ def login():
 
 # Github: Pull
 @app.route('/pull/')
+@auth.login_required
 def git_pull():
     msg = g.pull()
     return msg
@@ -75,6 +79,7 @@ def git_pull():
 
 # Mkdocs: Build
 @app.route('/build/')
+@auth.login_required
 def mkdocs_build():
     check = advanced_user_only()
     if check == 'access granted':

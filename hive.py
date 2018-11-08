@@ -65,11 +65,12 @@ def get_pw(username):
 # Password: Change user
 @app.route('/login/')
 def login():
-    login_trigger_url = 'http://login:xxx@' + request.host
+    login_trigger_url = 'http://simple:xxx@' + request.host
     return redirect(login_trigger_url)
 
 
 # Password: Logout
+# (doesn't work in Firefox currently)
 @app.route('/logout')
 def logout():
         return "Logout", 401
@@ -93,8 +94,8 @@ def mkdocs_build():
         proc = subprocess.Popen(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         proc_out, proc_err = proc.communicate()
-        out = proc_out.replace('\n', '<br>')
-        err = proc_err.replace('\n', '<br>')
+        out = proc_out.decode().replace('\n', '<br>')
+        err = proc_err.decode().replace('\n', '<br>')
         msg = '[Mkdocs] <br>' + err + out
         return msg
     else:

@@ -69,6 +69,12 @@ def login():
     return redirect(login_trigger_url)
 
 
+# Password: Logout
+@app.route('/logout')
+def logout():
+        return "Logout", 401
+
+
 # Github: Pull
 @app.route('/pull/')
 @auth.login_required
